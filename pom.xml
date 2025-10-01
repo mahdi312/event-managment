@@ -28,10 +28,10 @@
 
     <modules>
         <module>user-service</module>
-<!--        <module>api-gateway</module>-->
-<!--        <module>event-service</module>-->
-<!--        <module>ticketing-service</module>-->
-<!--        <module>notification-service</module>-->
+        <!--        <module>api-gateway</module>-->
+        <!--        <module>event-service</module>-->
+        <!--        <module>ticketing-service</module>-->
+        <!--        <module>notification-service</module>-->
     </modules>
 
     <dependencyManagement>
