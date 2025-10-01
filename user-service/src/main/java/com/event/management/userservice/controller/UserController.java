@@ -4,6 +4,7 @@ import com.event.management.userservice.dto.UserResponse;
 import com.event.management.userservice.dto.UserUpdateRequest;
 import com.event.management.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,13 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "User Management", description = "APIs for managing users")
+@SecurityRequirement(name="bearerAuth")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     @Operation(summary = "Get all users", description = "Retrieve all users (Admin only)")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> users = userService.getAllUsers();
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     @Operation(summary = "Update user", description = "Update user information (Admin only)")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
@@ -55,7 +57,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     @Operation(summary = "Delete user", description = "Delete a user (Admin only)")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
