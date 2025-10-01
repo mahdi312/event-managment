@@ -1,7 +1,5 @@
 # event-managment
-Okay, let's get you set up with a clear understanding of the big picture and a focused introduction to the User Service.
 
----
 
 ### Project Overview: Advanced Event Management Microservice Platform
 
