@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: event-service
+  profiles:
+    default: dev
+
+

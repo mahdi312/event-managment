@@ -13,8 +13,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version> <!-- Use a recent stable Spring Boot version -->
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.2.5</version>
+        <relativePath/>
     </parent>
 
     <properties>
@@ -28,10 +28,7 @@
 
     <modules>
         <module>user-service</module>
-        <!--        <module>api-gateway</module>-->
-        <!--        <module>event-service</module>-->
-        <!--        <module>ticketing-service</module>-->
-        <!--        <module>notification-service</module>-->
+        <module>event-service</module>
     </modules>
 
     <dependencyManagement>
@@ -60,7 +57,7 @@
                 <version>${mapstruct.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- JWT Dependencies -->
+
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
@@ -76,7 +73,7 @@
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-            <!-- SpringDoc OpenAPI -->
+
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

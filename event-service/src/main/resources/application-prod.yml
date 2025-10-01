@@ -1,13 +1,13 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-db
-    username: postgres
+    url: jdbc:postgresql://event-db:5432/event_db
+    username: user
     password: password
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -16,8 +16,11 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+  security:
+    user:
+      name: admin
+      password: admin
 
 application:
   security:
@@ -25,7 +28,7 @@ application:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 86400000
   performance:
-    threshold-ms: 50
+    threshold-ms: 200
 
 springdoc:
   swagger-ui:
@@ -45,6 +48,4 @@ springdoc:
 logging:
   level:
     root: INFO
-    com.event.management.userservice: DEBUG
-
-
+    com.event.management.eventservice: INFO

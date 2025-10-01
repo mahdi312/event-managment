@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   config:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-db
+    url: jdbc:postgresql://localhost:5432/event_db
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
@@ -24,8 +24,6 @@ application:
     jwt:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 86400000
-  performance:
-    threshold-ms: 50
 
 springdoc:
   swagger-ui:
@@ -42,9 +40,8 @@ springdoc:
   show-spring-cloud-configs: true
   override-with-rswag: false
 
+
 logging:
   level:
     root: INFO
-    com.event.management.userservice: DEBUG
-
-
+    com.event.management.eventservice: DEBUG
