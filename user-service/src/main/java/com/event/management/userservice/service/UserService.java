@@ -11,6 +11,7 @@ import com.event.management.userservice.mapper.UserMapper;
 import com.event.management.userservice.repository.RoleRepository;
 import com.event.management.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -35,14 +37,17 @@ public class UserService {
     @Cacheable(value = "users", key = "#id")
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long id) {
+        log.debug("Fetching user by id: {}", id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        log.trace("User entity: {}", user);
         return userMapper.toUserResponse(user);
     }
 
     @Cacheable(value = "users", key = "#username")
     @Transactional(readOnly = true)
     public UserResponse getUserByUsername(String username) {
+        log.debug("Fetching user by username: {}", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
         return userMapper.toUserResponse(user);
@@ -50,6 +55,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
+        log.debug("Fetching all users");
         List<User> users = userRepository.findAll();
         return userMapper.toUserResponseList(users);
     }
@@ -60,12 +66,14 @@ public class UserService {
     @CacheEvict(value = "users", key = "#result.username")
     @Transactional
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
+        log.info("Updating user id: {}", id);
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
 
         if (request.getUsername() != null && !request.getUsername().equals(existingUser.getUsername())) {
             if (userRepository.existsByUsername(request.getUsername())) {
+                log.warn("Username already taken during update: {}", request.getUsername());
                 throw new UsernameAlreadyExistsException("Username '" + request.getUsername() + "' is already taken.");
             }
         }
@@ -73,6 +81,7 @@ public class UserService {
 
         if (request.getEmail() != null && !request.getEmail().equals(existingUser.getEmail())) {
             if (userRepository.existsByEmail(request.getEmail())) {
+                log.warn("Email already in use during update: {}", request.getEmail());
                 throw new UsernameAlreadyExistsException("Email '" + request.getEmail() + "' is already in use.");
             }
         }
@@ -102,6 +111,7 @@ public class UserService {
         }
 
         User updatedUser = userRepository.save(existingUser);
+        log.debug("User updated: {}", updatedUser.getId());
         return userMapper.toUserResponse(updatedUser);
     }
 
@@ -113,8 +123,10 @@ public class UserService {
     })
     @Transactional
     public void deleteUser(Long id) {
+        log.info("Deleting user id: {}", id);
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         userRepository.delete(existingUser);
+        log.debug("User deleted id: {}", id);
     }
 }

@@ -11,6 +11,7 @@ import com.event.management.userservice.exception.UsernameAlreadyExistsException
 import com.event.management.userservice.repository.RoleRepository;
 import com.event.management.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -38,11 +40,14 @@ public class AuthService {
 
     @Transactional
     public JwtResponse registerUser(UserRegisterRequest request) {
+        log.info("Registering user: {}", request.getUsername());
         if (userRepository.existsByUsername(request.getUsername())) {
+            log.warn("Username already exists: {}", request.getUsername());
             throw new UsernameAlreadyExistsException("Username is already taken!");
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("Email already in use: {}", request.getEmail());
             throw new UsernameAlreadyExistsException("Email is already in use!");
         }
 
@@ -82,6 +87,7 @@ public class AuthService {
         }
         user.setRoles(roles);
         userRepository.save(user);
+        log.debug("User persisted with roles: {}", roles.stream().map(r -> r.getName().name()).collect(Collectors.toList()));
 
         return authenticateUser(AuthRequest.builder()
                 .username(request.getUsername())
@@ -90,6 +96,7 @@ public class AuthService {
     }
 
     public JwtResponse authenticateUser(AuthRequest request) {
+        log.info("Authenticating user: {}", request.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
@@ -105,7 +112,7 @@ public class AuthService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found after authentication: " + request.getUsername()));
 
-
+        log.debug("User authenticated with roles: {}", roles);
         return JwtResponse.builder()
                 .token(jwt)
                 .id(user.getId())

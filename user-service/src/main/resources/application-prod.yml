@@ -1,0 +1,51 @@
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://user-db:5432/user_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    user:
+      name: admin
+      password: admin
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+  performance:
+    threshold-ms: 200
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    tagsSorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  default-produces-media-type: application/json
+  paths-to-match: /api/v1/**
+  writer-with-order-by-keys: true
+  model-and-view-allowed: true
+  show-actuator: true
+  show-spring-cloud-configs: true
+  override-with-rswag: false
+
+logging:
+  level:
+    root: INFO
+    com.event.management.userservice: INFO
