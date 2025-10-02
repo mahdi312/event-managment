@@ -44,6 +44,12 @@ The **Event Service** is the core component for managing all event-related infor
 *   **Event Search & Discovery:** Allows users and other services to search and browse events based on various criteria.
 *   **Event Creator Ownership:** Tracks which user created an event, enabling specific authorization rules (e.g., only the creator or an administrator can modify an event).
 
+## Ticketing Service: What it Does
+The Ticketing Service is responsible for all aspects of ticket sales and booking management. Its primary responsibilities are:
+
+*   **Ticket Booking & Cancellation:** Manages the process of users purchasing and cancelling tickets for events, including handling the number of tickets.
+*   **Payment Processing & Concurrency:** Integrates with a mock payment provider to handle transactions and ensures concurrent bookings are safely managed to prevent overbooking.
+*   **Event-Driven Notifications:** Publishes messages to Kafka about successful bookings and cancellations, triggering asynchronous notifications.
 
 ## API Gateway: What it Does
 
