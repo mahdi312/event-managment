@@ -37,18 +37,18 @@ The **User Service** is the identity and access management hub of our platform. 
 
 The **Event Service** is the core component for managing all event-related information within the platform. Its primary responsibilities are:
 
-**Event Lifecycle Management:** Handles the creation, retrieval, updating, and deletion of event details (e.g., title, description, dates, location, ticket price).
-**Ticket Inventory Tracking:** Stores and manages the total number of tickets available for each event, as well as the current count of available tickets. It provides endpoints for other services (like the Ticketing Service) to safely decrement or increment these counts.
-**Event Search & Discovery:** Allows users and other services to search and browse events based on various criteria.
-**Event Creator Ownership:** Tracks which user created an event, enabling specific authorization rules (e.g., only the creator or an administrator can modify an event).
+*   **Event Lifecycle Management:** Handles the creation, retrieval, updating, and deletion of event details (e.g., title, description, dates, location, ticket price).
+*   **Ticket Inventory Tracking:** Stores and manages the total number of tickets available for each event, as well as the current count of available tickets. It provides endpoints for other services (like the Ticketing Service) to safely decrement or increment these counts.
+*   **Event Search & Discovery:** Allows users and other services to search and browse events based on various criteria.
+*   **Event Creator Ownership:** Tracks which user created an event, enabling specific authorization rules (e.g., only the creator or an administrator can modify an event).
 
 
 ### API Gateway: What it Does
 
 The **API Gateway** acts as the single, intelligent entry point for all client applications interacting with our microservices platform. Its primary responsibilities are:
 
-**Request Routing:** Directs incoming HTTP requests to the correct downstream microservice based on predefined paths (e.g., /api/v1/users/** goes to the User Service, /api/v1/events/** goes to the Event Service).
-**Centralized Authentication:** It intercepts all incoming requests, validates the JWT provided by the client, ensuring the user is authenticated before the request reaches any microservice.
-**Authorization Context Propagation:** After validating a JWT, it extracts crucial user information (like userId and roles) and injects them as custom headers into the request. These headers are then forwarded to the downstream microservices, allowing them to perform their own authorization checks without needing to re-validate the JWT.
-**Load Balancing:** Distributes incoming requests across multiple instances of a microservice, ensuring high availability and efficient resource utilization.
-**Fallback Mechanism:** Provides graceful degradation by returning a default response if a downstream microservice is unavailable, preventing client applications from crashing.
+*   **Request Routing:** Directs incoming HTTP requests to the correct downstream microservice based on predefined paths (e.g., /api/v1/users/** goes to the User Service, /api/v1/events/** goes to the Event Service).
+*   **Centralized Authentication:** It intercepts all incoming requests, validates the JWT provided by the client, ensuring the user is authenticated before the request reaches any microservice.
+*   **Authorization Context Propagation:** After validating a JWT, it extracts crucial user information (like userId and roles) and injects them as custom headers into the request. These headers are then forwarded to the downstream microservices, allowing them to perform their own authorization checks without needing to re-validate the JWT.
+*   **Load Balancing:** Distributes incoming requests across multiple instances of a microservice, ensuring high availability and efficient resource utilization.
+*   **Fallback Mechanism:** Provides graceful degradation by returning a default response if a downstream microservice is unavailable, preventing client applications from crashing.
