@@ -11,13 +11,15 @@ This project is a microservices-based web application designed to manage the lif
 
 1.  **Microservices (User, Event, Ticketing, Notification):** Each service owns a specific business capability and its own data. They expose **REST APIs** for synchronous interactions and use **Apache Kafka** for asynchronous, event-driven communication.
 2.  **API Gateway (Spring Cloud Gateway):** The single entry point for all client requests. It handles request routing, load balancing, and crucially, **centralized JWT authentication** before forwarding requests to the appropriate downstream service.
-3.  **Database (PostgreSQL):** Each microservice has its own dedicated PostgreSQL database, ensuring data independence and preventing tight coupling between services. We use **Spring Data JPA** for ORM.
-4.  **Security (Spring Security & JWT):** We implement **role-based access control (RBAC)**. Users authenticate once to the User Service, receive a **JSON Web Token (JWT)**, which is then used to secure all subsequent API calls.
-5.  **Asynchronous Messaging (Apache Kafka):** For non-real-time communication, like sending notifications after a ticket booking, ensuring services remain decoupled and resilient.
-6.  **Third-Party Integration:** We simulate interactions with external systems like a **payment provider** (for ticket purchases) and an **email service** (for notifications).
-7.  **Deployment (Docker & Kubernetes):** The entire platform is containerized using **Docker** for consistent environments, and we provide basic **Kubernetes manifests** for scalable orchestration.
-8.  **Performance:** Incorporates **connection pooling (HikariCP)** and **caching (Caffeine/Redis)** to optimize database access and API response times.
-9.  **Quality:** Emphasizes **clean code, API design, robust error handling,** and includes **unit and integration tests** for reliability.
+3.  **Eureka Server:** A dedicated server that maintains a registry of all active microservice instances.
+4.  **Eureka Client:** The mechanism by which microservices register themselves and discover other services dynamically.
+5.  **Database (PostgreSQL):** Each microservice has its own dedicated PostgreSQL database, ensuring data independence and preventing tight coupling between services. We use **Spring Data JPA** for ORM.
+6.  **Security (Spring Security & JWT):** We implement **role-based access control (RBAC)**. Users authenticate once to the User Service, receive a **JSON Web Token (JWT)**, which is then used to secure all subsequent API calls.
+7.  **Asynchronous Messaging (Apache Kafka):** For non-real-time communication, like sending notifications after a ticket booking, ensuring services remain decoupled and resilient.
+8.  **Third-Party Integration:** We simulate interactions with external systems like a **payment provider** (for ticket purchases) and an **email service** (for notifications).
+9.  **Deployment (Docker & Kubernetes):** The entire platform is containerized using **Docker** for consistent environments, and we provide basic **Kubernetes manifests** for scalable orchestration.
+10.  **Performance:** Incorporates **connection pooling (HikariCP)** and **caching (Caffeine/Redis)** to optimize database access and API response times.
+11.  **Quality:** Emphasizes **clean code, API design, robust error handling,** and includes **unit and integration tests** for reliability.
 
 In essence, we're building a modern, cloud-native application that is highly available, maintainable, and designed to handle real-world event management scenarios.
 
@@ -52,3 +54,15 @@ The **API Gateway** acts as the single, intelligent entry point for all client a
 *   **Authorization Context Propagation:** After validating a JWT, it extracts crucial user information (like userId and roles) and injects them as custom headers into the request. These headers are then forwarded to the downstream microservices, allowing them to perform their own authorization checks without needing to re-validate the JWT.
 *   **Load Balancing:** Distributes incoming requests across multiple instances of a microservice, ensuring high availability and efficient resource utilization.
 *   **Fallback Mechanism:** Provides graceful degradation by returning a default response if a downstream microservice is unavailable, preventing client applications from crashing.
+
+## Eureka Server: What it Does
+The Eureka Server functions as a centralized registry for all microservices in the platform. Its primary responsibilities are:
+
+*   **Service Registration:** It receives registration requests from all microservices, building a comprehensive directory of available service instances and their network locations.
+*   **Health Monitoring:** It continuously monitors the health and availability of registered services, quickly identifying and removing unresponsive instances from its registry.
+
+## Eureka Client: What it Does
+The Eureka Client is a library embedded within each microservice and the API Gateway. Its primary responsibilities are:
+
+*   **Self-Registration:** Automatically registers the microservice instance with the Eureka Server upon startup, providing its network address and metadata.
+*   **Service Discovery:** Queries the Eureka Server to locate other microservice instances by their logical name, enabling dynamic and resilient inter-service communication.
