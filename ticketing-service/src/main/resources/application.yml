@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ticketing-service
+  profiles:
+    default: dev
+
+
