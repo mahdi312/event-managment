@@ -1,24 +1,27 @@
+server:
+  port: 8080
+
 spring:
-  config:
-    activate:
-      on-profile: dev
   cloud:
     gateway:
       routes:
-        - id: event-service
-          uri: lb://event-service
-          predicates:
-            - Path=/api/v1/events/**
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/v1/users/**
-#        - id: ticketing-service
-#          uri: lb://ticketing-service
-#          predicates:
-#            - Path=/api/v1/tickets/**
-server:
-  port: 9090
+      default-filters:
+        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 eureka:
   instance:
