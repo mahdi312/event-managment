@@ -23,7 +23,7 @@ In essence, we're building a modern, cloud-native application that is highly ava
 
 ---
 
-### User Service: What it Does
+## User Service: What it Does
 
 The **User Service** is the identity and access management hub of our platform. Its primary responsibilities are:
 
@@ -33,7 +33,7 @@ The **User Service** is the identity and access management hub of our platform. 
 *   **JWT Generation & Validation:** It's responsible for creating the JWTs that other services will use to authenticate requests, and it provides the necessary components for other services to validate these tokens.
 *   **Role-Based Access Control (RBAC):** It defines and stores the roles that users possess, which are then used by Spring Security across all services to authorize access to specific functionalities.
 
-### Event Service: What it Does
+## Event Service: What it Does
 
 The **Event Service** is the core component for managing all event-related information within the platform. Its primary responsibilities are:
 
@@ -43,7 +43,7 @@ The **Event Service** is the core component for managing all event-related infor
 *   **Event Creator Ownership:** Tracks which user created an event, enabling specific authorization rules (e.g., only the creator or an administrator can modify an event).
 
 
-### API Gateway: What it Does
+## API Gateway: What it Does
 
 The **API Gateway** acts as the single, intelligent entry point for all client applications interacting with our microservices platform. Its primary responsibilities are:
 
