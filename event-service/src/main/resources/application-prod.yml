@@ -49,3 +49,13 @@ logging:
   level:
     root: INFO
     com.event.management.eventservice: INFO
+
+
+eureka:
+  instance:
+    hostname: event-service
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
