@@ -8,8 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
 @EnableCaching
+@EnableFeignClients
 public class TicketingServiceApplication {
 
     public static void main(String[] args) {
