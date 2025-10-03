@@ -3,7 +3,6 @@ package com.event.management.userservice.controller;
 import com.event.management.userservice.dto.AuthRequest;
 import com.event.management.userservice.dto.JwtResponse;
 import com.event.management.userservice.dto.UserRegisterRequest;
-import com.event.management.userservice.dto.UserResponse;
 import com.event.management.userservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
