@@ -7,8 +7,8 @@ spring:
       on-profile: prod
   datasource:
     url: jdbc:postgresql://event-db:5432/event_db
-    username: user
-    password: password
+    username: eventuser
+    password: eventpassword
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -49,6 +49,19 @@ logging:
   level:
     root: INFO
     com.event.management.eventservice: INFO
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
 
 
 eureka:

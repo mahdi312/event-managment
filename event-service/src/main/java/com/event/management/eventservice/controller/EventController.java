@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
 @Tag(name = "Events", description = "Event management APIs")
+@Slf4j
 public class EventController {
 
     private final EventService eventService;
@@ -29,6 +31,7 @@ public class EventController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest request) {
+        log.info("POST /api/v1/events createEvent title={}", request.getTitle());
         EventResponse response = eventService.createEvent(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -36,6 +39,7 @@ public class EventController {
     @Operation(summary = "Get all events", description = "Retrieves a list of all events.")
     @GetMapping
     public ResponseEntity<List<EventResponse>> getAllEvents() {
+        log.debug("GET /api/v1/events getAllEvents");
         List<EventResponse> events = eventService.getAllEvents();
         return ResponseEntity.ok(events);
     }
@@ -43,6 +47,7 @@ public class EventController {
     @Operation(summary = "Get event by ID", description = "Retrieves event by its ID.")
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEventById(@PathVariable Long id) {
+        log.debug("GET /api/v1/events/{}", id);
         EventResponse event = eventService.getEventById(id);
         return ResponseEntity.ok(event);
     }
@@ -52,6 +57,7 @@ public class EventController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     public ResponseEntity<EventResponse> updateEvent(@PathVariable Long id, @Valid @RequestBody EventRequest request) {
+        log.info("PUT /api/v1/events/{}", id);
         EventResponse response = eventService.updateEvent(id, request);
         return ResponseEntity.ok(response);
     }
@@ -62,6 +68,7 @@ public class EventController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEvent(@PathVariable Long id) {
+        log.warn("DELETE /api/v1/events/{}", id);
         eventService.deleteEvent(id);
     }
 
@@ -70,6 +77,7 @@ public class EventController {
     @PutMapping("/{id}/decrement-tickets")
     @PreAuthorize("hasAnyRole('ADMIN', 'EVENT_MANAGER')")
     public ResponseEntity<EventResponse> decrementEventTickets(@PathVariable Long id, @RequestBody Map<String, Integer> request) {
+        log.info("PUT /api/v1/events/{}/decrement-tickets", id);
         Integer numberOfTickets = request.get("numberOfTickets");
         if (numberOfTickets == null || numberOfTickets <= 0) {
             throw new IllegalArgumentException("Number of tickets to decrement must be positive.");

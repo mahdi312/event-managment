@@ -7,6 +7,8 @@ import com.event.management.eventservice.exception.EventNotFoundException;
 import com.event.management.eventservice.mapper.EventMapper;
 import com.event.management.eventservice.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventService {
 
     private final EventRepository eventRepository;
@@ -24,6 +27,7 @@ public class EventService {
 
     @Transactional
     public EventResponse createEvent(EventRequest request) {
+        log.info("Creating event: title={}, start={}, end={}, totalTickets={}", request.getTitle(), request.getStartTime(), request.getEndTime(), request.getTotalTickets());
         Event event = eventMapper.toEntity(request);
         event.setCreatedByUserId(getUserIdFromSecurityContext());
 
@@ -34,6 +38,7 @@ public class EventService {
             throw new IllegalArgumentException("End time must be after start time.");
         }
         Event savedEvent = eventRepository.save(event);
+        log.debug("Event created with id={} by userId={}", savedEvent.getId(), savedEvent.getCreatedByUserId());
         return eventMapper.toDto(savedEvent);
     }
 
@@ -43,12 +48,16 @@ public class EventService {
     }
 
 
+    @Cacheable(cacheNames = "events")
     public List<EventResponse> getAllEvents() {
+        log.debug("Fetching all events from database");
         List<Event> events = eventRepository.findAll();
         return eventMapper.toDtoList(events);
     }
 
+    @Cacheable(cacheNames = "eventById", key = "#id")
     public EventResponse getEventById(Long id) {
+        log.debug("Fetching event by id={}", id);
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + id));
         return eventMapper.toDto(event);
@@ -56,6 +65,7 @@ public class EventService {
 
     @Transactional
     public EventResponse updateEvent(Long id, EventRequest request) {
+        log.info("Updating event id={}", id);
         Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + id));
 
@@ -79,11 +89,13 @@ public class EventService {
         }
 
         Event updatedEvent = eventRepository.save(existingEvent);
+        log.debug("Event updated id={}", updatedEvent.getId());
         return eventMapper.toDto(updatedEvent);
     }
 
     @Transactional
     public void deleteEvent(Long id) {
+        log.warn("Deleting event id={}", id);
         Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + id));
 
@@ -104,6 +116,7 @@ public class EventService {
 
     @Transactional
     public EventResponse decrementAvailableTickets(Long eventId, int numberOfTickets) {
+        log.info("Decrementing tickets: eventId={}, by={}", eventId, numberOfTickets);
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
 
@@ -118,6 +131,7 @@ public class EventService {
 
     @Transactional
     public EventResponse incrementAvailableTickets(Long eventId, int numberOfTickets) {
+        log.info("Incrementing tickets: eventId={}, by={}", eventId, numberOfTickets);
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
 
