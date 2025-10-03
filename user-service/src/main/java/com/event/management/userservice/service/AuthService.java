@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -101,8 +102,6 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtService.generateToken(authentication);
-
         org.springframework.security.core.userdetails.User springUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
         List<String> roles = springUser.getAuthorities().stream()
@@ -111,6 +110,12 @@ public class AuthService {
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found after authentication: " + request.getUsername()));
+
+        Map<String, Object> claims = new java.util.HashMap<>();
+        claims.put("roles", roles);
+        claims.put("userId", user.getId());
+
+        String jwt = jwtService.generateToken(claims, user.getUsername());
 
         log.debug("User authenticated with roles: {}", roles);
         return JwtResponse.builder()

@@ -6,7 +6,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-db
+    url: jdbc:postgresql://localhost:5432/user_db
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
@@ -56,3 +56,16 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans

@@ -59,3 +59,16 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://eureka-server:8761/eureka
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans

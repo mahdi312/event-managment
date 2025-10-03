@@ -25,6 +25,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class AuthServiceTest {
@@ -61,7 +63,7 @@ class AuthServiceTest {
         );
 
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
-        when(jwtService.generateToken(any(Authentication.class))).thenReturn("jwt");
+        when(jwtService.generateToken(anyMap(), anyString())).thenReturn("jwt");
         when(userRepository.findByUsername("Mahdi")).thenReturn(Optional.of(User.builder().id(1L).username("Mahdi").email("j@e.com").build()));
 
         JwtResponse response = authService.authenticateUser(request);
@@ -89,7 +91,7 @@ class AuthServiceTest {
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
-        when(jwtService.generateToken(any(Authentication.class))).thenReturn("jwt2");
+        when(jwtService.generateToken(anyMap(), anyString())).thenReturn("jwt2");
         when(userRepository.findByUsername("Mahdi")).thenReturn(Optional.of(User.builder().id(5L).username("Mahdi").email("mahdi@example.com").build()));
 
         JwtResponse response = authService.registerUser(req);
