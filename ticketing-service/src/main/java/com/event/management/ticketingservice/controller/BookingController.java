@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/v1/bookings")
 @RequiredArgsConstructor
 @Tag(name = "Bookings", description = "Ticket booking and management APIs")
+@Slf4j
 @SecurityRequirement(name = "bearerAuth")
 public class BookingController {
 
@@ -29,6 +31,7 @@ public class BookingController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BookingResponse> bookTickets(@Valid @RequestBody BookingRequest request,
                                                        @RequestHeader("Authorization") String authorizationHeader) {
+        log.info("POST /api/v1/bookings bookTickets eventId={}, quantity={}", request.getEventId(), request.getNumberOfTickets());
         BookingResponse response = bookingService.bookTickets(request, authorizationHeader);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -38,6 +41,7 @@ public class BookingController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<BookingResponse> cancelBooking(@PathVariable Long id,
                                                          @RequestHeader("Authorization") String authorizationHeader) {
+        log.warn("PUT /api/v1/bookings/{}/cancel", id);
         BookingResponse response = bookingService.cancelBooking(id, authorizationHeader);
         return ResponseEntity.ok(response);
     }
@@ -46,6 +50,7 @@ public class BookingController {
     @GetMapping("/my-bookings")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<BookingResponse>> getMyBookings(@RequestHeader("Authorization") String authorizationHeader) {
+        log.debug("GET /api/v1/bookings/my-bookings");
         List<BookingResponse> bookings = bookingService.getBookingsByUserId(authorizationHeader);
         return ResponseEntity.ok(bookings);
     }

@@ -1,0 +1,51 @@
+server:
+  port: 18083
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:ticketdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    db:
+      enabled: true
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+
+event-service:
+  url: http://localhost:18082
+
+logging:
+  level:
+    root: INFO
+    com.event.management.ticketingservice: DEBUG
+
+

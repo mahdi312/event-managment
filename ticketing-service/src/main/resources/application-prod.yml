@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://ticketing-db:5432/ticketing_db
-    username: user
-    password: password
+    username: ticketuser
+    password: ticketpassword
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -62,3 +62,16 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://eureka-server:8761/eureka
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
