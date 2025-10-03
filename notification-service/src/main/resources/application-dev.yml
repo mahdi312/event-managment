@@ -1,0 +1,58 @@
+server:
+  port: 8084
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  mail:
+    host: smtp.mailtrap.io
+    port: 2525
+    username: mahdi_mostafavi2011@yahoo.com
+    password: Hamishe31@312
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  kafka:
+    bootstrap-servers: localhost:9093
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      missing-topics-fatal: false
+
+    properties:
+      spring:
+        json:
+          trusted:
+            packages: "com.event.management.notificationservice.event"
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+user-service:
+  url: http://localhost:8081
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
