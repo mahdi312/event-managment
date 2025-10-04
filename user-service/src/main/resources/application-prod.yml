@@ -19,8 +19,7 @@ spring:
         format_sql: true
   sql:
     init:
-      mode: always
-      data-locations: classpath:data.sql
+      mode: never
   security:
     user:
       name: admin

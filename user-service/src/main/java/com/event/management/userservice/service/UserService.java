@@ -61,7 +61,6 @@ public class UserService {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     @CachePut(value = "users", key = "#id")
     @CacheEvict(value = "users", key = "#result.username")
     @Transactional
@@ -94,7 +93,11 @@ public class UserService {
                 for (String roleName : request.getRoles()) {
                     RoleType roleType;
                     try {
-                        roleType = RoleType.valueOf("ROLE_" + roleName.toUpperCase());
+                        String normalizedRole = roleName.toUpperCase();
+                        if (!normalizedRole.startsWith("ROLE_")) {
+                            normalizedRole = "ROLE_" + normalizedRole;
+                        }
+                        roleType = RoleType.valueOf(normalizedRole);
                     } catch (IllegalArgumentException e) {
                         throw new IllegalArgumentException("Invalid role specified: " + roleName);
                     }
@@ -116,7 +119,6 @@ public class UserService {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Caching(evict = {
             @CacheEvict(value = "users", key = "#id"),
             @CacheEvict(value = "users", key = "#result.username")
