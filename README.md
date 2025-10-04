@@ -20,6 +20,9 @@ This project is a microservices-based web application designed to manage the lif
 9.  **Deployment (Docker & Kubernetes):** The entire platform is containerized using **Docker** for consistent environments, and we provide basic **Kubernetes manifests** for scalable orchestration.
 10.  **Performance:** Incorporates **connection pooling (HikariCP)** and **caching (Caffeine/Redis)** to optimize database access and API response times.
 11.  **Quality:** Emphasizes **clean code, API design, robust error handling,** and includes **unit and integration tests** for reliability.
+12.  **Micrometer:** A vendor-neutral application metrics facade, integrated into each service to collect performance data.
+13.  **Spring Boot Actuator:** Provides production-ready features for monitoring and managing services, exposing endpoints for health, metrics, and environment details.
+14.  **Zipkin:** A distributed tracing system used to visualize how requests flow through multiple microservices, aiding in performance analysis and debugging.
 
 In essence, we're building a modern, cloud-native application that is highly available, maintainable, and designed to handle real-world event management scenarios.
 
@@ -51,6 +54,13 @@ The Ticketing Service is responsible for all aspects of ticket sales and booking
 *   **Payment Processing & Concurrency:** Integrates with a mock payment provider to handle transactions and ensures concurrent bookings are safely managed to prevent overbooking.
 *   **Event-Driven Notifications:** Publishes messages to Kafka about successful bookings and cancellations, triggering asynchronous notifications.
 
+## Notification Service: What it Does
+The Notification Service handles all outbound communication related to events and bookings. Its primary responsibilities are:
+
+*   **Asynchronous Event Consumption:** Listens for and processes TicketBookedEvent and TicketCancelledEvent messages from Kafka.
+*   **Email Dispatch:** Fetches necessary user details from the User Service and sends automated email confirmations or cancellations to participants via a configured email service.
+*   **Decoupled Communication:** Operates asynchronously, ensuring that email sending failures do not impact the core booking process.
+
 ## API Gateway: What it Does
 
 The **API Gateway** acts as the single, intelligent entry point for all client applications interacting with our microservices platform. Its primary responsibilities are:
@@ -72,3 +82,21 @@ The Eureka Client is a library embedded within each microservice and the API Gat
 
 *   **Self-Registration:** Automatically registers the microservice instance with the Eureka Server upon startup, providing its network address and metadata.
 *   **Service Discovery:** Queries the Eureka Server to locate other microservice instances by their logical name, enabling dynamic and resilient inter-service communication.
+
+## Micrometer: What it Does
+Micrometer is the instrumentation layer for our application metrics. Its primary responsibilities are:
+
+*   **Metric Collection:** Provides a standardized API for collecting various types of application metrics (counters, gauges, timers, histograms) from within each microservice.
+*   **Vendor-Neutrality:** It allows us to instrument our code once, and then export these metrics to different monitoring systems (like Prometheus) without changing the application code.
+
+## Spring Boot Actuator: What it Does
+Spring Boot Actuator adds production-ready operational capabilities to each microservice. Its primary responsibilities are:
+
+*   **Monitoring Endpoints:** Exposes HTTP endpoints (e.g., /health, /info, /metrics, /env) that provide insights into the application's state, health, environment, and performance metrics.
+*   Management Features:** Enables features for managing the application at runtime, such as logging level changes and bean inspection, crucial for diagnostics and operational control.
+
+## Zipkin: What it Does
+Zipkin is a distributed tracing system integrated across all microservices. Its primary responsibilities are:
+
+*   **Request Tracing:** Collects and visualizes end-to-end traces of requests as they flow through multiple microservices, showing latency at each step.
+*   **Performance Analysis & Debugging:** Helps identify performance bottlenecks, understand inter-service dependencies, and debug issues in a complex distributed environment by providing a clear timeline of operations.
