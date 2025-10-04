@@ -1,0 +1,44 @@
+#!/bin/bash
+
+echo "=========================================="
+echo "Building Event Management Platform"
+echo "=========================================="
+
+echo ""
+echo "Building all projects with Maven..."
+echo "This may take a few minutes on first run..."
+echo ""
+
+if ! mvn clean install -DskipTests; then
+    echo ""
+    echo "ERROR: Maven build failed!"
+    echo "Please check the error messages above and fix any issues."
+    echo ""
+    echo "Common issues and solutions:"
+    echo "1. Java version mismatch - ensure you have Java 17 or higher"
+    echo "2. Maven not found - ensure Maven is installed and in PATH"
+    echo "3. Network issues - check your internet connection for dependencies"
+    echo "4. Port conflicts - ensure no services are using the required ports"
+    echo ""
+    exit 1
+fi
+
+echo ""
+echo "=========================================="
+echo "Build completed successfully!"
+echo "=========================================="
+echo ""
+echo "All microservices have been built and are ready to run."
+echo ""
+echo "You can now start the services using:"
+echo "- ./start-local.sh (Linux/Mac)"
+echo "- start-local.bat (Windows)"
+echo ""
+echo "Or start individual services manually:"
+echo "- cd eureka-server && mvn spring-boot:run"
+echo "- cd user-service && mvn spring-boot:run"
+echo "- cd event-service && mvn spring-boot:run"
+echo "- cd ticketing-service && mvn spring-boot:run"
+echo "- cd notification-service && mvn spring-boot:run"
+echo "- cd api-gateway && mvn spring-boot:run"
+echo ""

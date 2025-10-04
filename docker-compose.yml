@@ -11,6 +11,7 @@ services:
       - "5431:5432"
     volumes:
       - user_db_data:/var/lib/postgresql/data
+      - ./user-service/src/main/resources/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user"]
       interval: 10s
@@ -28,6 +29,7 @@ services:
       - "5432:5432"
     volumes:
       - event_db_data:/var/lib/postgresql/data
+      - ./event-service/src/main/resources/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U eventuser"]
       interval: 10s
@@ -45,6 +47,7 @@ services:
       - "5433:5432"
     volumes:
       - ticketing_db_data:/var/lib/postgresql/data
+      - ./ticketing-service/src/main/resources/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ticketuser"]
       interval: 10s
